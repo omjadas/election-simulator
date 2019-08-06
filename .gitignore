@@ -91,6 +91,8 @@ typings/
 # TypeScript cache
 *.tsbuildinfo
 
+out/
+
 # Optional npm cache directory
 .npm
 
@@ -151,7 +153,7 @@ tags
 [._]*.un~
 
 ### VisualStudioCode ###
-.vscode/*
+.vscode/
 !.vscode/settings.json
 !.vscode/tasks.json
 !.vscode/launch.json
