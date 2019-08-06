@@ -1,6 +1,6 @@
-interface preference {
+interface Preference {
   candidate: string,
-  preference: number
+  preference: number,
 };
 
 class Election {
@@ -14,9 +14,9 @@ class Election {
    * Adds a preferences to the election
    * @param preferences the preferences for the vote to be added
    */
-  addPreferences(preferences: preference[]): void {
+  addPreferences(preferences: Preference[]): void {
     this.votes.push(new Vote(preferences));
-    preferences.forEach(preference => { this.allCandidates.add(preference.candidate) });
+    preferences.forEach(preference => { this.allCandidates.add(preference.candidate); });
   }
 
   /**
@@ -25,7 +25,7 @@ class Election {
    */
   addVote(vote: Vote): void {
     this.votes.push(vote);
-    vote.preferences.forEach(preference => { this.allCandidates.add(preference.candidate) });
+    vote.preferences.forEach(preference => { this.allCandidates.add(preference.candidate); });
   }
 
   /**
@@ -50,7 +50,7 @@ class Election {
       if (!(candidate in counts)) {
         counts[candidate] = 0;
       }
-    })
+    });
 
     return counts;
   }
@@ -83,8 +83,8 @@ class Election {
 
     var pref: number = 2;
     while (leastVotes.length > 1 && pref <= this.maxPreference) {
-      var new_counts = this.countPreference(pref);
-      leastVotes = this.leastVotes(new_counts);
+      var newCounts = this.countPreference(pref);
+      leastVotes = this.leastVotes(newCounts);
     }
 
     return leastVotes;
@@ -147,12 +147,12 @@ class Election {
 
       this.votes.forEach(vote => {
         election.addVote(Vote.copy(vote));
-      })
+      });
 
       var leastVotes = this.nextRound();
       leastVotes.forEach(candidate => {
         election.eliminateCandidate(candidate);
-      })
+      });
 
       return election.getWinner();
     } else {
@@ -165,21 +165,21 @@ class Election {
 
 class Vote {
 
-  constructor(public preferences: preference[] = []) {
+  constructor(public preferences: Preference[] = []) {
   }
 
   /**
    * Add a preference to a vote, the existing preferences are checked to see if there is a clash
-   * @param new_preference preference to add to the vote
+   * @param newPreference preference to add to the vote
    */
-  addPreference(new_preference: preference): void {
+  addPreference(newPreference: Preference): void {
     this.preferences.forEach(preference => {
-      if (new_preference.preference == preference.preference) {
-        throw "Preference already exists"
+      if (newPreference.preference == preference.preference) {
+        throw "Preference already exists";
       }
     });
 
-    this.preferences.push(new_preference);
+    this.preferences.push(newPreference);
   }
 
   /**
