@@ -1,0 +1,13 @@
+{
+    "compilerOptions": {
+        "lib": [
+            "esnext"
+        ],
+        "experimentalDecorators": true,
+        "outDir": "out",
+        "sourceMap": true
+    },
+    "files": [
+        "election.ts",
+    ]
+}
