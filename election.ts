@@ -3,16 +3,27 @@ interface Preference {
   preference: number,
 };
 
+interface Counts {
+  [key: string]: number,
+}
+
 class Election {
   votes: Vote[] = [];
   allCandidates: Set<string> = new Set();
 
+
+  /**
+   * Creates an instance of Election.
+   * @param {number} [maxPreference=Infinity] the max preference number allowed in the election
+   * @memberof Election
+   */
   constructor(public maxPreference: number = Infinity) {
   }
 
   /**
    * Adds a preferences to the election
-   * @param preferences the preferences for the vote to be added
+   * @param {Preference[]} preferences the preferences for the vote to be added
+   * @memberof Election
    */
   addPreferences(preferences: Preference[]): void {
     this.votes.push(new Vote(preferences));
@@ -21,7 +32,8 @@ class Election {
 
   /**
    * Adds a vote to the election
-   * @param vote the vote to add to the election
+   * @param {Vote} vote the vote to add to the election
+   * @memberof Election
    */
   addVote(vote: Vote): void {
     this.votes.push(vote);
@@ -30,10 +42,12 @@ class Election {
 
   /**
    * Return an Object with the preferences counted for each candidate
-   * @param preferenceNumber the preference number to count
+   * @param {number} preferenceNumber the preference number to count
+   * @returns {Counts} object containing candidates as keys, and vote counts as values
+   * @memberof Election
    */
-  countPreference(preferenceNumber: number): Object {
-    var counts: Object = {};
+  countPreference(preferenceNumber: number): Counts {
+    var counts: Counts = {};
     this.votes.forEach(vote => {
       vote.preferences.forEach(preference => {
         if (preference.preference === preferenceNumber) {
@@ -57,9 +71,11 @@ class Election {
 
   /**
    * Returns an array containing the candidates with the least votes
-   * @param counts Object containing the counts for all candidates
+   * @param {Counts} counts Object containing the counts for all candidates
+   * @returns {string[]} array of all candidates with the least votes
+   * @memberof Election
    */
-  leastVotes(counts: Object): string[] {
+  leastVotes(counts: Counts): string[] {
     var leastVotes = Math.min(...Object.keys(counts).map(key => counts[key]));
     return Object.keys(counts).filter(candidate => {
       return counts[candidate] === leastVotes;
@@ -68,15 +84,22 @@ class Election {
 
   /**
    * Returns an array containing the candidates with the most votes
-   * @param counts Object containing the counts for all candidates
+   * @param {Counts} counts Object containing the counts for all candidates
+   * @returns {string[]} array of all candidates with the most votes
+   * @memberof Election
    */
-  mostVotes(counts: Object): string[] {
+  mostVotes(counts: Counts): string[] {
     var mostVotes = Math.max(...Object.keys(counts).map(key => counts[key]));
     return Object.keys(counts).filter(candidate => {
       return counts[candidate] === mostVotes;
     });
   }
 
+  /**
+   * Determines what candidates should be eliminated
+   * @returns {string[]} array of candidates to eliminate
+   * @memberof Election
+   */
   nextRound(): string[] {
     var counts = this.countPreference(1);
     var leastVotes = this.leastVotes(counts);
@@ -92,8 +115,8 @@ class Election {
 
   /**
    * Removes a specified candidate from all votes in the Election
-   * @param candidate the candidate to eliminate from the votes
-   * @param numVotes the number of first preference votes the candidate to remove had at the time of their removal
+   * @param {string} candidate the candidate to eliminate from the votes
+   * @memberof Election
    */
   eliminateCandidate(candidate: string): void {
     this.allCandidates.delete(candidate);
@@ -106,6 +129,12 @@ class Election {
     });
   }
 
+  /**
+   * Returns the candidate/s that came in the nth position
+   * @param {number} n the position of the candidate/s to return
+   * @returns {string[]} array containing candidate/s that came in nth place
+   * @memberof Election
+   */
   getNthCandidate(n: number): string[] {
     if (n === 1) {
       return this.getWinner();
@@ -121,12 +150,11 @@ class Election {
     }
   }
 
-  getWinner(): string[] {
-    return this.simulate();
-  }
 
   /**
-   * Checks if a winner has been found
+   * Checks if a winner has been found, or a tie has been reached
+   * @returns {boolean} has a winner been found
+   * @memberof Election
    */
   haveWinner(): boolean {
     var counts = this.countPreference(1);
@@ -139,9 +167,11 @@ class Election {
   }
 
   /**
-   * Simulates the election
+   * Returns the winner/s of the election
+   * @returns {string[]} the winner/s of the election
+   * @memberof Election
    */
-  simulate(): string[] {
+  getWinner(): string[] {
     if (!this.haveWinner()) {
       var election = new Election(this.maxPreference - 1);
 
@@ -165,12 +195,18 @@ class Election {
 
 class Vote {
 
+  /**
+   * Creates an instance of Vote.
+   * @param {Preference[]} [preferences=[]] the preferences to fill the vote with
+   * @memberof Vote
+   */
   constructor(public preferences: Preference[] = []) {
   }
 
   /**
    * Add a preference to a vote, the existing preferences are checked to see if there is a clash
-   * @param newPreference preference to add to the vote
+   * @param {Preference} newPreference preference to add to the vote
+   * @memberof Vote
    */
   addPreference(newPreference: Preference): void {
     this.preferences.forEach(preference => {
@@ -184,7 +220,8 @@ class Vote {
 
   /**
    * Removes a candidate from a vote and shift all candidates with preferences less than the one removed up by one
-   * @param candidate candidate to remove from a vote
+   * @param {string} candidate candidate to remove from a vote
+   * @memberof Vote
    */
   shiftPreferences(candidate: string): void {
     var preferenceNumber: Number;
@@ -204,6 +241,13 @@ class Vote {
     });
   }
 
+  /**
+   * Creates a copy of a Vote
+   * @static
+   * @param {Vote} vote the vote to create a copy of
+   * @returns {Vote} a copy of vote
+   * @memberof Vote
+   */
   static copy(vote: Vote): Vote {
     var voteCopy = new Vote();
     vote.preferences.forEach(preference => {
