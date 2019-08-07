@@ -11,7 +11,6 @@ class Election {
   votes: Vote[] = [];
   allCandidates: Set<string> = new Set();
 
-
   /**
    * Creates an instance of Election.
    * @param {number} [maxPreference=Infinity] the max preference number allowed in the election
@@ -149,7 +148,6 @@ class Election {
       return election.getNthCandidate(n - 1);
     }
   }
-
 
   /**
    * Checks if a winner has been found, or a tie has been reached
