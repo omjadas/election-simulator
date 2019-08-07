@@ -7,7 +7,7 @@ interface Counts {
   [key: string]: number,
 }
 
-class Election {
+export class Election {
   votes: Vote[] = [];
   allCandidates: Set<string> = new Set();
 
@@ -27,6 +27,7 @@ class Election {
   addPreferences(preferences: Preference[]): void {
     this.votes.push(new Vote(preferences));
     preferences.forEach(preference => { this.allCandidates.add(preference.candidate); });
+    this.maxPreference = this.allCandidates.size;
   }
 
   /**
@@ -37,6 +38,7 @@ class Election {
   addVote(vote: Vote): void {
     this.votes.push(vote);
     vote.preferences.forEach(preference => { this.allCandidates.add(preference.candidate); });
+    this.maxPreference = this.allCandidates.size;
   }
 
   /**
@@ -107,6 +109,7 @@ class Election {
     while (leastVotes.length > 1 && pref <= this.maxPreference) {
       var newCounts = this.countPreference(pref);
       leastVotes = this.leastVotes(newCounts);
+      pref++;
     }
 
     return leastVotes;
@@ -158,7 +161,7 @@ class Election {
     var counts = this.countPreference(1);
     var mostVotes: string[] = this.mostVotes(counts);
 
-    if (((counts[mostVotes[0]] / this.votes.length) > 0.5) || this.allCandidates.size == 2) {
+    if (((counts[mostVotes[0]] / this.votes.length) > 0.5) || new Set(Object.values(counts)).size === 1 || this.allCandidates.size == 0) {
       return true;
     }
     return false;
@@ -191,7 +194,7 @@ class Election {
   }
 }
 
-class Vote {
+export class Vote {
 
   /**
    * Creates an instance of Vote.
@@ -254,4 +257,3 @@ class Vote {
     return voteCopy;
   }
 }
-
