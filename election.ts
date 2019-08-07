@@ -254,3 +254,4 @@ class Vote {
     return voteCopy;
   }
 }
+
