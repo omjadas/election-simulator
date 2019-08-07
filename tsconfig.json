@@ -8,6 +8,6 @@
         "sourceMap": true
     },
     "files": [
-        "election.ts",
+        "src/election.ts",
     ]
 }
