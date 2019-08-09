@@ -45,9 +45,27 @@ describe("elections", () => {
       });
   
       test("all votes", () => {
-        const myElection = new Election(4);
+        const myElection = new Election();
         uniformPreferences.forEach(preference => myElection.addPreferences(preference));
         expect(myElection.getWinner()).toEqual(["apple", "banana"]);
+      });
+
+      test("all candidates returned", () => {
+        const myElection = new Election();
+        uniformPreferences.forEach(preference => myElection.addPreferences(preference));
+        var allCandidates = new Set();
+        uniformPreferences.forEach(preference => {
+          preference.forEach(candidate => {
+            allCandidates.add(candidate.candidate);
+          });
+        });
+        var returned = 0;
+        var i = 1;
+        while (myElection.getNthCandidate(i).length) {
+          returned += myElection.getNthCandidate(i).length;
+          i++;
+        }
+        expect(returned).toBe(allCandidates.size);
       });
     });
     
@@ -60,7 +78,23 @@ describe("elections", () => {
 
   describe("non-uniform preferences", () => {
     describe("results", () => {
-
+      test("all candidates returned", () => {
+        const myElection = new Election();
+        nonUniformPreferences.forEach(preference => myElection.addPreferences(preference));
+        var allCandidates = new Set();
+        nonUniformPreferences.forEach(preference => {
+          preference.forEach(candidate => {
+            allCandidates.add(candidate.candidate);
+          });
+        });
+        var returned = 0;
+        var i = 1;
+        while (myElection.getNthCandidate(i).length) {
+          returned += myElection.getNthCandidate(i).length;
+          i++;
+        }
+        expect(returned).toBe(allCandidates.size);
+      });
     });
   });
 });
