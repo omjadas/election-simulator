@@ -7,16 +7,16 @@ interface Counts {
   [key: string]: number,
 }
 
-class Election {
+export class Election {
   votes: Vote[] = [];
   allCandidates: Set<string> = new Set();
+  maxPreference: number = 0;
 
   /**
    * Creates an instance of Election.
-   * @param {number} [maxPreference=Infinity] the max preference number allowed in the election
    * @memberof Election
    */
-  constructor(public maxPreference: number = Infinity) {
+  constructor() {
   }
 
   /**
@@ -27,6 +27,7 @@ class Election {
   addPreferences(preferences: Preference[]): void {
     this.votes.push(new Vote(preferences));
     preferences.forEach(preference => { this.allCandidates.add(preference.candidate); });
+    this.setMaxPreference();
   }
 
   /**
@@ -37,6 +38,17 @@ class Election {
   addVote(vote: Vote): void {
     this.votes.push(vote);
     vote.preferences.forEach(preference => { this.allCandidates.add(preference.candidate); });
+    this.setMaxPreference();
+  }
+
+  /**
+   * Set the maxPreference attribute
+   * @memberof Election
+   */
+  setMaxPreference(): void {
+    this.votes.forEach(vote => {
+      this.maxPreference = vote.preferences.length > this.maxPreference ? vote.preferences.length : this.maxPreference;
+    });
   }
 
   /**
@@ -106,7 +118,8 @@ class Election {
     var pref: number = 2;
     while (leastVotes.length > 1 && pref <= this.maxPreference) {
       var newCounts = this.countPreference(pref);
-      leastVotes = this.leastVotes(newCounts);
+      leastVotes = leastVotes.filter(value => this.leastVotes(newCounts).includes(value));
+      pref++;
     }
 
     return leastVotes;
@@ -119,13 +132,14 @@ class Election {
    */
   eliminateCandidate(candidate: string): void {
     this.allCandidates.delete(candidate);
+    this.maxPreference--;
 
-    this.votes.slice().reverse().forEach((vote, index) => {
-      vote.shiftPreferences(candidate);
-      if (vote.preferences.length == 0) {
-        this.votes.splice(-index - 1, 1);
+    for (var i = (this.votes.length - 1); i >= 0; i--) {
+      this.votes[i].shiftPreferences(candidate);
+      if (this.votes[i].preferences.length == 0) {
+        this.votes.splice(i, 1);
       }
-    });
+    }
   }
 
   /**
@@ -138,7 +152,7 @@ class Election {
     if (n === 1) {
       return this.getWinner();
     } else {
-      var election = new Election(this.maxPreference - 1);
+      var election = new Election();
       this.votes.forEach(vote => {
         election.addVote(Vote.copy(vote));
       });
@@ -158,7 +172,7 @@ class Election {
     var counts = this.countPreference(1);
     var mostVotes: string[] = this.mostVotes(counts);
 
-    if (((counts[mostVotes[0]] / this.votes.length) > 0.5) || this.allCandidates.size == 2) {
+    if (((counts[mostVotes[0]] / this.votes.length) > 0.5) || new Set(Object.values(counts)).size === 1 || this.allCandidates.size == 0) {
       return true;
     }
     return false;
@@ -171,7 +185,7 @@ class Election {
    */
   getWinner(): string[] {
     if (!this.haveWinner()) {
-      var election = new Election(this.maxPreference - 1);
+      var election = new Election();
 
       this.votes.forEach(vote => {
         election.addVote(Vote.copy(vote));
@@ -191,7 +205,7 @@ class Election {
   }
 }
 
-class Vote {
+export class Vote {
 
   /**
    * Creates an instance of Vote.
@@ -254,4 +268,3 @@ class Vote {
     return voteCopy;
   }
 }
-
