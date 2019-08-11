@@ -268,3 +268,35 @@ export class Vote {
     return voteCopy;
   }
 }
+
+/**
+ * Reads the votes from the input sheet
+ * @param {GoogleAppsScript.Spreadsheet.Sheet} input the sheet to read the votes from
+ * @returns {Vote[]} array of all votes
+ */
+function readVotes(input: GoogleAppsScript.Spreadsheet.Sheet): Vote[] {
+  var vals = input.getRange("B2:F").getValues();
+  var votes = [];
+  vals.forEach(prefs => {
+    var vote = new Vote();
+    prefs.forEach((pref, index) =>{
+      vote.addPreference({candidate: pref, preference: index+1});
+    });
+    votes.push(vote);
+  });
+  return votes;
+}
+
+/**
+ * Main entrypoint for program
+ */
+function main(): void {
+  var ss = SpreadsheetApp.getActive();
+  var input = ss.getSheetByName("Form Responses 1");
+  var preferences = readVotes(input);
+
+  var myElection = new Election();
+  preferences.forEach(vote => {
+    myElection.addVote(vote);
+  });
+}
