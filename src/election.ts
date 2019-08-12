@@ -360,10 +360,16 @@ function readVotes(input: GoogleAppsScript.Spreadsheet.Sheet): Vote[] {
 function main(): void {
   var ss = SpreadsheetApp.getActive();
   var input = ss.getSheetByName("Form Responses 1");
+  var output = ss.getSheetByName("Final Results");
   var preferences = readVotes(input);
 
   var myElection = new Election();
   preferences.forEach(vote => {
     myElection.addVote(vote);
   });
+  
+  var i = 1;
+  while(myElection.getNthCandidate(i).length){
+    output.appendRow(myElection.getNthCandidate(i));
+  }
 }
