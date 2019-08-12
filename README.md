@@ -20,7 +20,7 @@ Once clasp is installed run the following command
 clasp login
 ```
 
-Once you have logged in you can run one of the following commands to set up an apps project
+After you have logged in you can run one of the following commands to set up an apps script project
 
 ```sh
 clasp clone <sheet-id>               # if you wish to clone an existing apps script project, where <sheet-id> is the id of an the existing sheet
