@@ -7,9 +7,76 @@ interface Counts {
   [key: string]: number,
 }
 
+class MySet {
+  private props: any[] = [];
+  public size: number = 0;
+
+  /**
+   * Creates an instance of MySet.
+   * @memberof MySet
+   */
+  constructor(vals: any[] = []) {
+    vals.forEach(val => this.add(val));
+  }
+
+  /**
+   * Adds a property to an instance of MySet
+   * @param {any} item property to add
+   * @returns {MySet}
+   * @memberof MySet
+   */
+  add(item: any): MySet {
+    if (!this.includes(item)) {
+      this.props.push(item);
+    }
+    this.size = this.props.length;
+    return this;
+  }
+
+  /**
+   * Executes a callback on each prop of an instance of MySet
+   * @param {(arg0: any) => void} callback
+   * @param {*} [scope]
+   * @memberof MySet
+   */
+  forEach(callback: (arg0: any) => void, scope?: any): void {
+    this.props.forEach(callback, scope);
+  }
+
+  /**
+   * Deletes a property from an instance of MySet
+   * @param {any} item property to delete 
+   * @returns {boolean}
+   * @memberof MySet
+   */
+  delete(item: any): boolean {
+    if (this.includes(item)) {
+      this.props.splice(this.props.indexOf(item), 1);
+    }
+    this.size = this.props.length;
+    return true;
+  }
+
+  /**
+   * Determines whether an item is in an instance of MySet
+   * @param {any} item property to check
+   * @returns {boolean}
+   * @memberof MySet
+   */
+  includes(item: any): boolean {
+    var r = false;
+    this.props.forEach(prop => {
+      if (prop === item) {
+        r = true;
+      }
+    });
+    return r;
+  }
+}
+
 export class Election {
   votes: Vote[] = [];
-  allCandidates: Set<string> = new Set();
+  allCandidates: MySet = new MySet();
   maxPreference: number = 0;
 
   /**
@@ -118,7 +185,7 @@ export class Election {
     var pref: number = 2;
     while (leastVotes.length > 1 && pref <= this.maxPreference) {
       var newCounts = this.countPreference(pref);
-      leastVotes = leastVotes.filter(value => this.leastVotes(newCounts).includes(value));
+      leastVotes = leastVotes.filter(value => this.leastVotes(newCounts).indexOf(value) > -1);
       pref++;
     }
 
@@ -172,7 +239,7 @@ export class Election {
     var counts = this.countPreference(1);
     var mostVotes: string[] = this.mostVotes(counts);
 
-    if (((counts[mostVotes[0]] / this.votes.length) > 0.5) || new Set(Object.values(counts)).size === 1 || this.allCandidates.size == 0) {
+    if (((counts[mostVotes[0]] / this.votes.length) > 0.5) || new MySet(Object.keys(counts).map(e => counts[e])).size === 1 || this.allCandidates.size == 0) {
       return true;
     }
     return false;
@@ -266,5 +333,51 @@ export class Vote {
       voteCopy.addPreference({ candidate: preference.candidate, preference: preference.preference });
     });
     return voteCopy;
+  }
+}
+
+/**
+ * Reads the votes from the input sheet
+ * @param {GoogleAppsScript.Spreadsheet.Sheet} input the sheet to read the votes from
+ * @returns {Vote[]} array of all votes
+ */
+function readVotes(input: GoogleAppsScript.Spreadsheet.Sheet): Vote[] {
+  var vals = input.getRange("B2:F").getValues();
+  var votes = [];
+  vals.some(prefs => {
+    if (!prefs[0]) {
+      return;
+    }
+    var vote = new Vote();
+    prefs.forEach((pref, index) => {
+      vote.addPreference({ candidate: pref, preference: index + 1 });
+    });
+    votes.push(vote);
+  });
+  return votes;
+}
+
+/**
+ * Main entrypoint for program
+ */
+function main(): void {
+  var ss = SpreadsheetApp.getActive();
+  var input = ss.getSheetByName("Form Responses 1");
+  var output = ss.getSheetByName("Final Results");
+  var preferences = readVotes(input);
+
+  var myElection = new Election();
+  preferences.forEach(vote => {
+    myElection.addVote(vote);
+  });
+  
+  output.clear();
+
+  var i = 1;
+  var cands = myElection.getNthCandidate(i);
+  while(cands.length){
+    output.appendRow(cands);
+    i++;
+    cands = myElection.getNthCandidate(i);
   }
 }
