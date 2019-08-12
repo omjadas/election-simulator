@@ -34,7 +34,7 @@ class MySet {
   }
 
   /**
-   *
+   * Executes a callback on each prop of an instance of MySet
    * @param {() => void} callback
    * @param {*} scope
    * @memberof MySet
