@@ -185,7 +185,7 @@ export class Election {
     var pref: number = 2;
     while (leastVotes.length > 1 && pref <= this.maxPreference) {
       var newCounts = this.countPreference(pref);
-      leastVotes = leastVotes.filter(value => this.leastVotes(newCounts).includes(value));
+      leastVotes = leastVotes.filter(value => this.leastVotes(newCounts).indexOf(value) > -1);
       pref++;
     }
 
@@ -239,7 +239,7 @@ export class Election {
     var counts = this.countPreference(1);
     var mostVotes: string[] = this.mostVotes(counts);
 
-    if (((counts[mostVotes[0]] / this.votes.length) > 0.5) || new MySet(Object.values(counts)).size === 1 || this.allCandidates.size == 0) {
+    if (((counts[mostVotes[0]] / this.votes.length) > 0.5) || new MySet(Object.keys(counts).map(e => counts[e])).size === 1 || this.allCandidates.size == 0) {
       return true;
     }
     return false;
@@ -344,7 +344,10 @@ export class Vote {
 function readVotes(input: GoogleAppsScript.Spreadsheet.Sheet): Vote[] {
   var vals = input.getRange("B2:F").getValues();
   var votes = [];
-  vals.forEach(prefs => {
+  vals.some(prefs => {
+    if (!prefs[0]) {
+      return;
+    }
     var vote = new Vote();
     prefs.forEach((pref, index) => {
       vote.addPreference({ candidate: pref, preference: index + 1 });
@@ -368,8 +371,13 @@ function main(): void {
     myElection.addVote(vote);
   });
   
+  output.clear();
+
   var i = 1;
-  while(myElection.getNthCandidate(i).length){
-    output.appendRow(myElection.getNthCandidate(i));
+  var cands = myElection.getNthCandidate(i);
+  while(cands.length){
+    output.appendRow(cands);
+    i++;
+    cands = myElection.getNthCandidate(i);
   }
 }
