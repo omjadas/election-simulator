@@ -370,12 +370,12 @@ function main(): void {
   preferences.forEach(vote => {
     myElection.addVote(vote);
   });
-  
+
   output.clear();
 
   var i = 1;
   var cands = myElection.getNthCandidate(i);
-  while(cands.length){
+  while (cands.length) {
     output.appendRow(cands);
     i++;
     cands = myElection.getNthCandidate(i);
