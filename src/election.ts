@@ -26,7 +26,7 @@ class MySet {
    * @memberof MySet
    */
   add(item: any): MySet {
-    if (!this.props.includes(item)) {
+    if (!this.includes(item)) {
       this.props.push(item);
     }
     this.size = this.props.length;
@@ -35,11 +35,11 @@ class MySet {
 
   /**
    * Executes a callback on each prop of an instance of MySet
-   * @param {() => void} callback
-   * @param {*} scope
+   * @param {(arg0: any) => void} callback
+   * @param {*} [scope]
    * @memberof MySet
    */
-  forEach(callback: (arg0: string) => void, scope?: any): void {
+  forEach(callback: (arg0: any) => void, scope?: any): void {
     this.props.forEach(callback, scope);
   }
 
@@ -50,7 +50,7 @@ class MySet {
    * @memberof MySet
    */
   delete(item: any): boolean {
-    if (this.props.includes(item)) {
+    if (this.includes(item)) {
       this.props.splice(this.props.indexOf(item), 1);
     }
     this.size = this.props.length;
@@ -59,12 +59,18 @@ class MySet {
 
   /**
    * Determines whether an item is in an instance of MySet
-   * @param {string} item property to check
+   * @param {any} item property to check
    * @returns {boolean}
    * @memberof MySet
    */
-  includes(item: string): boolean {
-    return this.props.includes(item);
+  includes(item: any): boolean {
+    var r = false;
+    this.props.forEach(prop => {
+      if (prop === item) {
+        r = true;
+      }
+    });
+    return r;
   }
 }
 
