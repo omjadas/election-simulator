@@ -7,9 +7,70 @@ interface Counts {
   [key: string]: number,
 }
 
+class MySet {
+  private props: any[] = [];
+  public size: number = 0;
+
+  /**
+   * Creates an instance of MySet.
+   * @memberof MySet
+   */
+  constructor(vals: any[] = []) {
+    vals.forEach(val => this.add(val));
+  }
+
+  /**
+   * Adds a property to an instance of MySet
+   * @param {any} item property to add
+   * @returns {MySet}
+   * @memberof MySet
+   */
+  add(item: any): MySet {
+    if (!this.props.includes(item)) {
+      this.props.push(item);
+      this.size++;
+    }
+    return this;
+  }
+
+  /**
+   *
+   * @param {() => void} callback
+   * @param {*} scope
+   * @memberof MySet
+   */
+  forEach(callback: (arg0: string) => void, scope?: any): void {
+    this.props.forEach(callback, scope);
+  }
+
+  /**
+   * Deletes a property from an instance of MySet
+   * @param {any} item property to delete 
+   * @returns {boolean}
+   * @memberof MySet
+   */
+  delete(item: any): boolean {
+    if (this.props.includes(item)) {
+      this.props.splice(this.props.indexOf(item), 1);
+      this.size--;
+    }
+    return true;
+  }
+
+  /**
+   * Determines whether an item is in an instance of MySet
+   * @param {string} item property to check
+   * @returns {boolean}
+   * @memberof MySet
+   */
+  includes(item: string): boolean {
+    return this.props.includes(item);
+  }
+}
+
 export class Election {
   votes: Vote[] = [];
-  allCandidates: Set<string> = new Set();
+  allCandidates: MySet = new MySet();
   maxPreference: number = 0;
 
   /**
@@ -172,7 +233,7 @@ export class Election {
     var counts = this.countPreference(1);
     var mostVotes: string[] = this.mostVotes(counts);
 
-    if (((counts[mostVotes[0]] / this.votes.length) > 0.5) || new Set(Object.values(counts)).size === 1 || this.allCandidates.size == 0) {
+    if (((counts[mostVotes[0]] / this.votes.length) > 0.5) || new MySet(Object.values(counts)).size === 1 || this.allCandidates.size == 0) {
       return true;
     }
     return false;
@@ -279,8 +340,8 @@ function readVotes(input: GoogleAppsScript.Spreadsheet.Sheet): Vote[] {
   var votes = [];
   vals.forEach(prefs => {
     var vote = new Vote();
-    prefs.forEach((pref, index) =>{
-      vote.addPreference({candidate: pref, preference: index+1});
+    prefs.forEach((pref, index) => {
+      vote.addPreference({ candidate: pref, preference: index + 1 });
     });
     votes.push(vote);
   });

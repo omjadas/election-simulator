@@ -4,7 +4,7 @@
   "description": "",
   "main": "election.js",
   "scripts": {
-    "test": "jest"
+    "test": "npx jest"
   },
   "author": "Omja Das",
   "license": "MIT",
