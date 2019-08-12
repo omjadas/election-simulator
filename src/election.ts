@@ -28,8 +28,8 @@ class MySet {
   add(item: any): MySet {
     if (!this.props.includes(item)) {
       this.props.push(item);
-      this.size++;
     }
+    this.size = this.props.length;
     return this;
   }
 
@@ -52,8 +52,8 @@ class MySet {
   delete(item: any): boolean {
     if (this.props.includes(item)) {
       this.props.splice(this.props.indexOf(item), 1);
-      this.size--;
     }
+    this.size = this.props.length;
     return true;
   }
 
