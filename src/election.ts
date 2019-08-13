@@ -185,7 +185,7 @@ export class Election {
     var pref: number = 2;
     while (leastVotes.length > 1 && pref <= this.maxPreference) {
       var newCounts = this.countPreference(pref);
-      leastVotes = leastVotes.filter(value => this.leastVotes(newCounts).indexOf(value) > -1);
+      leastVotes = leastVotes.filter(value => this.leastVotes(newCounts).indexOf(value) > -1).length ? leastVotes.filter(value => this.leastVotes(newCounts).indexOf(value) > -1) : leastVotes;
       pref++;
     }
 
