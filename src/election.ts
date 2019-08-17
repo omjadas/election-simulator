@@ -239,7 +239,7 @@ export class Election {
     var counts = this.countPreference(1);
     var mostVotes: string[] = this.mostVotes(counts);
 
-    if (((counts[mostVotes[0]] / this.votes.length) > 0.5) || new MySet(Object.keys(counts).map(e => counts[e])).size === 1 || this.allCandidates.size == 0) {
+    if (((counts[mostVotes[0]] / this.votes.length) > 0.5) || this.nextRound().length === this.allCandidates.size || this.allCandidates.size == 0) {
       return true;
     }
     return false;
