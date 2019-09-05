@@ -45,7 +45,7 @@ class MySet {
 
   /**
    * Deletes a property from an instance of MySet
-   * @param {any} item property to delete 
+   * @param {any} item property to delete
    * @returns {boolean}
    * @memberof MySet
    */
@@ -290,7 +290,7 @@ export class Vote {
   addPreference(newPreference: Preference): void {
     this.preferences.forEach(preference => {
       if (newPreference.preference == preference.preference) {
-        throw "Preference already exists";
+        throw new Error("Preference already exists");
       }
     });
 
