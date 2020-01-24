@@ -1,6 +1,6 @@
 # electionSimulator
 
-[![Actions Status](https://github.com/omjadas/electionSimulator/workflows/Node%20CI/badge.svg)](https://github.com/omjadas/electionSimulator/actions)
+[![Actions Status](https://github.com/omjadas/electionSimulatorAppsScript/workflows/Node%20CI/badge.svg)](https://github.com/omjadas/electionSimulatorAppsScript/actions)
 
 To set up environment run the following command
 
