@@ -1,7 +1,7 @@
 {
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
-        "project": "./tsconfig.json",
+        "project": "./tsconfig.test.json",
         "sourceType": "module"
     },
     "plugins": [
@@ -10,16 +10,28 @@
     "rules": {
         "@typescript-eslint/array-type": [
             "error",
-            "array"
-        ],
-        "camelcase": "off",
-        "@typescript-eslint/camelcase": [
-            "error",
             {
-                "properties": "always"
+                "default": "array"
             }
         ],
-        "@typescript-eslint/class-name-casing": "error",
+        "camelcase": "off",
+        "@typescript-eslint/naming-convention": [
+            "error",
+            {
+              "selector": "variableLike",
+              "format": [
+                "camelCase",
+                "UPPER_CASE"
+              ],
+              "leadingUnderscore": "allow"
+            },
+            {
+              "selector": "typeLike",
+              "format": [
+                "PascalCase"
+              ]
+            }
+          ],
         "@typescript-eslint/explicit-function-return-type": [
             "error",
             {
