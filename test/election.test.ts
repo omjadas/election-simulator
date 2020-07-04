@@ -37,13 +37,13 @@ describe("elections", () => {
         const myElection = new Election();
         expect(myElection.getWinner()).toEqual([]);
       });
-  
+
       test("one vote", () => {
         const myElection = new Election();
         myElection.addPreferences(uniformPreferences[0]);
         expect(myElection.getWinner()).toEqual(["apple"]);
       });
-  
+
       test("all votes", () => {
         const myElection = new Election();
         uniformPreferences.forEach(preference => myElection.addPreferences(preference));
@@ -68,7 +68,7 @@ describe("elections", () => {
         expect(returned).toBe(allCandidates.size);
       });
     });
-    
+
     test("counts", () => {
       const myElection = new Election();
       uniformPreferences.forEach(preference => myElection.addPreferences(preference));

@@ -4,6 +4,7 @@
   "description": "",
   "main": "election.js",
   "scripts": {
+    "lint": "eslint --max-warnings 0 \"src/**/*.ts\" \"test/**/*.ts\"",
     "test": "jest --config jest.config.json"
   },
   "author": "Omja Das",
