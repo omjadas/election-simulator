@@ -1,5 +1,5 @@
 {
-  "name": "election-simulation",
+  "name": "election-simulator",
   "version": "1.0.0",
   "description": "",
   "main": "election.js",

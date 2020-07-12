@@ -1,4 +1,4 @@
-# electionSimulator
+# election-simulator
 
 [![Actions Status](https://github.com/omjadas/electionSimulatorAppsScript/workflows/Node%20CI/badge.svg)](https://github.com/omjadas/electionSimulatorAppsScript/actions)
 
