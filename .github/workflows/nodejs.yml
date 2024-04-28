@@ -16,7 +16,7 @@ jobs:
     - name: npm ci
       run: npm ci
     - name: npm test
-      uses: paambaati/codeclimate-action@v2.7.5
+      uses: paambaati/codeclimate-action@v6.0.0
       env:
         CI: true
         CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
